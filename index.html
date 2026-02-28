@@ -287,6 +287,8 @@ function startGame() {
 function retryGame() {
   resetGame();
   waiting = true;
+  bgMusic.currentTime=0;
+  bgMusic.play();
   document.getElementById("retryBtn").style.display = "none";
 }
 
@@ -320,6 +322,7 @@ loop();
 
 </body>
 </html>
+
 
 
 
