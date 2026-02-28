@@ -229,15 +229,17 @@ function draw() {
   ctx.setTransform(1,0,0,1,0,0);
   ctx.fillStyle = "white";
 
-  // Current Score (Big Center)
-  ctx.font = "bold 40px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(score, canvas.width / 2, 80);
+ctx.setTransform(1,0,0,1,0,0);
+ctx.fillStyle = "white";
+ctx.textAlign = "left";
 
-  // High Score (Top Right)
-  ctx.font = "bold 18px Arial";
-  ctx.textAlign = "right";
-  ctx.fillText("High: " + highScore, canvas.width - 20, 40);
+// High Score
+ctx.font = "bold 20px Arial";
+ctx.fillText("HIGH SCORE: " + highScore, 20, 40);
+
+// Score (with 2 digit format like 09)
+ctx.font = "bold 20px Arial";
+ctx.fillText("SCORE: " + String(score).padStart(2, '0'), 20, 70);
 }
 
 function loop() {
@@ -313,3 +315,4 @@ loop();
 
 </body>
 </html>
+
