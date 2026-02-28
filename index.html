@@ -41,7 +41,6 @@ canvas {
   font-size: 18px;
 }
 
-/* THEME MENU */
 #themeMenu {
   display: none;
 }
@@ -55,27 +54,31 @@ canvas {
   display: none;
 }
 
+/* GAME OVER BOX */
 #retryBtn {
   position: fixed;
   left: 50%;
-  top: 60%;
+  top: 55%;
   transform: translate(-50%, -50%);
-  padding: 14px 28px;
-  font-size: 18px;
-  z-index: 10;
+  padding: 25px 45px;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 12px;
+  background: white;
   display: none;
+  z-index: 10;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
 <div id="home">
   <h1>Flappy Bird</h1>
   <button onclick="startGame()">▶ Start Game</button>
-
   <button onclick="toggleThemeMenu()">🎨 Theme</button>
+
   <div id="themeMenu">
     <button onclick="selectTheme('city')">🏙 City</button>
     <button onclick="selectTheme('night')">🌙 Night</button>
@@ -85,17 +88,15 @@ canvas {
   <button onclick="exitGame()">❌ Exit</button>
 </div>
 
-<!-- GAME UI -->
 <div id="ui">
   <button onclick="goHome()">⬅ Menu</button>
 </div>
 
-<button id="retryBtn" onclick="retryGame()">🔁 Retry</button>
+<button id="retryBtn" onclick="retryGame()"></button>
 
 <canvas id="game"></canvas>
 
 <script>
-/* CANVAS */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -125,18 +126,9 @@ pipeBottomImg.src = "img/down.png";
 
 /* THEMES */
 const themes = {
-  city: {
-    bg: "img/city.png",
-    bird: "img/greenbird.png"
-  },
-  night: {
-    bg: "img/night.png",
-    bird: "img/bird1-removebg-preview.png"
-  },
-  sunny: {
-    bg: "img/sunny.png",
-    bird: "img/birdwhite-removebg-preview.png"
-  }
+  city: { bg: "img/city.png", bird: "img/greenbird.png" },
+  night: { bg: "img/night.png", bird: "img/bird1-removebg-preview.png" },
+  sunny: { bg: "img/sunny.png", bird: "img/birdwhite-removebg-preview.png" }
 };
 
 function loadTheme(name) {
@@ -170,13 +162,21 @@ function addPipe() {
 
 function endGame() {
   if (gameOver) return;
+
   hitSound.play();
   gameOver = true;
-  document.getElementById("retryBtn").style.display = "block";
+
   if (score > highScore) {
     highScore = score;
     localStorage.setItem("highScore", highScore);
   }
+
+  document.getElementById("retryBtn").innerHTML =
+    "Game Over<br><br>Score: " + score +
+    "<br>High Score: " + highScore +
+    "<br><br>🔁 Retry";
+
+  document.getElementById("retryBtn").style.display = "block";
 }
 
 function update() {
@@ -197,11 +197,18 @@ function update() {
       scoreSound.play();
     }
 
-    if (
-      bird.x + bird.w > p.x &&
-      bird.x < p.x + 52 &&
-      (bird.y < p.top || bird.y + bird.h > p.top + 180)
-    ) endGame();
+    const pipeWidth = 52;
+    const gap = 180;
+
+    const collideX = bird.x + bird.w - 5 > p.x &&
+                     bird.x + 5 < p.x + pipeWidth;
+
+    const collideTop = bird.y + 5 < p.top;
+    const collideBottom = bird.y + bird.h - 5 > p.top + gap;
+
+    if (collideX && (collideTop || collideBottom)) {
+      endGame();
+    }
   });
 
   if (bird.y < 0 || bird.y + bird.h > GAME_HEIGHT) endGame();
@@ -221,7 +228,16 @@ function draw() {
 
   ctx.setTransform(1,0,0,1,0,0);
   ctx.fillStyle = "white";
-  ctx.fillText("Score: " + score, 12, 90);
+
+  // Current Score (Big Center)
+  ctx.font = "bold 40px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(score, canvas.width / 2, 80);
+
+  // High Score (Top Right)
+  ctx.font = "bold 18px Arial";
+  ctx.textAlign = "right";
+  ctx.fillText("High: " + highScore, canvas.width - 20, 40);
 }
 
 function loop() {
@@ -297,13 +313,3 @@ loop();
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
