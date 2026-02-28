@@ -140,6 +140,9 @@ function loadTheme(name) {
 const flapSound = new Audio("audio/flap.mp3");
 const hitSound = new Audio("audio/hit.mp3");
 const scoreSound = new Audio("audio/score.wav");
+  const bgMusic = new Audio("audio/bg.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.5;
 
 /* GAME STATE */
 let bird, pipes, frame, score;
@@ -315,4 +318,5 @@ loop();
 
 </body>
 </html>
+
 
